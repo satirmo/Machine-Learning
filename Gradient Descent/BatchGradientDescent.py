@@ -7,6 +7,15 @@ class BatchGradientDescent :
 		ones = np.ones( ( self.m, 1 ) )
 		trainingData = np.concatenate( ( ones, trainingData ), axis = 1 )
 
+		self.X = trainingData[ :, : self.n ]
+		self.Y = trainingData[ :, self.n ]
+
+		self.ScaleTrainingData()
+
+	def ShuffleTrainingData( self ) :
+		self.Y = self.Y.reshape( ( self.m, 1 ))
+
+		trainingData = np.concatenate( ( self.X, self.Y ), axis = 1 )
 		np.random.shuffle( trainingData )
 
 		self.X = trainingData[ :, : self.n ]
@@ -34,7 +43,7 @@ class BatchGradientDescent :
 		if Theta is None :
 			Theta = np.zeros( self.n )
 
-		self.ScaleTrainingData()
+		self.ShuffleTrainingData()
 
 		for iteration in range( maxIterations ) :
 			H = self.X.dot( Theta.transpose() )
@@ -44,7 +53,7 @@ class BatchGradientDescent :
 
 			if abs( self.Cost( Theta ) - self.Cost( Theta1 ) ) < convergenceTolerance :
 				self.Theta = Theta1
-
+				
 				return True
 
 			Theta = Theta1
@@ -72,7 +81,7 @@ class BatchGradientDescent :
 if __name__ == "__main__" :
 	trainingData = np.loadtxt( "portlandHouseData.txt", delimiter = "," )
 	bgd = BatchGradientDescent( trainingData )
-	converged = bgd.MinimizeCostFunction( alpha = 0.25 )
+	converged = bgd.MinimizeCostFunction( alpha = 0.25, convergenceTolerance = 100, maxIterations = 10000 )
 
 	if converged :
 		queries = np.loadtxt( "queries.txt", delimiter = "," )

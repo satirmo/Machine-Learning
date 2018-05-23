@@ -12,6 +12,13 @@ class StochasticGradientDescent :
 		self.X = trainingData[ :, : self.n ]
 		self.Y = trainingData[ :, self.n ]
 
+	def ShuffleTrainingData( self ) :
+		trainingData = np.concatenate( ( self.X, self.Y.reshape( ( self.m, 1 ) ) ), axis = 1 )
+		np.random.shuffle( trainingData )
+
+		self.X = trainingData[ :, : self.n ]
+		self.Y = trainingData[ :, self.n ]
+
 	def ScaleTrainingData( self ) :
 		self.means = np.zeros( self.n )
 		self.stdDevs = np.ones( self.n )
@@ -39,6 +46,8 @@ class StochasticGradientDescent :
 		iteration = 0
 
 		while iteration < maxIterations :
+			self.ShuffleTrainingData()
+
 			for i in range( self.m ) :
 				X = self.X[ i, : ]
 				Y = self.Y[ i ]
@@ -82,7 +91,7 @@ class StochasticGradientDescent :
 if __name__ == "__main__" :
 	trainingData = np.loadtxt( "portlandHouseData.txt", delimiter = "," )
 	sgd = StochasticGradientDescent( trainingData )
-	converged = sgd.MinimizeCostFunction( convergenceTolerance = 100, alpha = 0.25 )
+	converged = sgd.MinimizeCostFunction( alpha = 0.25, convergenceTolerance = 100, maxIterations = 10000 )
 
 	if converged :
 		queries = np.loadtxt( "queries.txt", delimiter = "," )
