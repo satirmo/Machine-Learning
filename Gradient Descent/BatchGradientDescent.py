@@ -13,9 +13,7 @@ class BatchGradientDescent :
 		self.ScaleTrainingData()
 
 	def ShuffleTrainingData( self ) :
-		self.Y = self.Y.reshape( ( self.m, 1 ))
-
-		trainingData = np.concatenate( ( self.X, self.Y ), axis = 1 )
+		trainingData = np.concatenate( ( self.X, self.Y.reshape( ( self.m, 1 ) ) ), axis = 1 )
 		np.random.shuffle( trainingData )
 
 		self.X = trainingData[ :, : self.n ]
@@ -48,6 +46,8 @@ class BatchGradientDescent :
 		for iteration in range( maxIterations ) :
 			H = self.X.dot( Theta.transpose() )
 			gradient = np.array( [ ( 1.0 / self.m ) * ( ( self.Y - H ) * ( X ) ).sum( axis = 0 ) for X in self.X.transpose() ] )
+			
+			
 			
 			Theta1 = Theta + alpha * gradient
 

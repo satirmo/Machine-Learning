@@ -7,10 +7,10 @@ class StochasticGradientDescent :
 		ones = np.ones( ( self.m, 1 ) )
 		trainingData = np.concatenate( ( ones, trainingData ), axis = 1 )
 
-		np.random.shuffle( trainingData )
-
 		self.X = trainingData[ :, : self.n ]
 		self.Y = trainingData[ :, self.n ]
+		
+		self.ScaleTrainingData()
 
 	def ShuffleTrainingData( self ) :
 		trainingData = np.concatenate( ( self.X, self.Y.reshape( ( self.m, 1 ) ) ), axis = 1 )
@@ -40,8 +40,6 @@ class StochasticGradientDescent :
 
 		if Theta is None :
 			Theta = np.zeros( self.n )
-
-		self.ScaleTrainingData()
 
 		iteration = 0
 
